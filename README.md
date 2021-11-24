@@ -11,3 +11,7 @@
 ## Requirements
 
 - `pip install -r requirements.txt`
+
+## Lab 2
+
+- [Click here to see the results](https://github.com/aptmess/MMA/blob/master/mma_lab_2_shirokov.ipynb)
