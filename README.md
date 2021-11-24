@@ -14,4 +14,6 @@
 
 ## Lab 2
 
-- [Click here to see the results](https://github.com/aptmess/MMA/blob/master/mma_lab_2_shirokov.ipynb)
+- [Jupyter Notebook](https://github.com/aptmess/MMA/blob/master/mma_lab_2_shirokov.ipynb)
+
+- [Report](https://github.com/aptmess/MMA/tree/master/docs)
