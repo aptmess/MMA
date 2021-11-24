@@ -1,10 +1,13 @@
-# MMA
-Methods and models for multivariate data analysis. Second lab
+# Methods and models for multivariate data analysis. Lab 2
 
-# Made by
+## Made by
 
-- Aleksandr Shirokov, J4133c
+- **Aleksandr Shirokov, J4133c**
 
-# [Link to dataset](https://www.kaggle.com/devbcdestiller/bitcoin-usdt-price-trend-indicators)
+## [Link to dataset](https://www.kaggle.com/devbcdestiller/bitcoin-usdt-price-trend-indicators)
 
-- load to root directory, name `btc2.csv`
+- load to `./data/` directory, named by `data.csv`
+
+## Requirements
+
+- `pip install -r requirements.txt`
