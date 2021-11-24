@@ -6,3 +6,5 @@ Methods and models for multivariate data analysis. Second lab
 - Aleksandr Shirokov, J4133c
 
 # [Link to dataset](https://www.kaggle.com/devbcdestiller/bitcoin-usdt-price-trend-indicators)
+
+- load to root directory, name `btc2.csv`
