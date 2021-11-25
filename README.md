@@ -16,4 +16,4 @@
 
 - [Jupyter Notebook](https://github.com/aptmess/MMA/blob/master/mma_lab_2_shirokov.ipynb)
 
-- [Report](https://github.com/aptmess/MMA/tree/master/docs)
+- ! [Report](https://github.com/aptmess/MMA/blob/master/docs/report/report_practice_2_shirokov.pdf)
