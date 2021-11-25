@@ -105,7 +105,7 @@ centertags]{article} % относится к классу article и разме�
 		\begin{flushright}
 		Performed by\\
 		Aleksandr Shirokov\\
-		J4133c\\
+		Team 26, J4133c\\
 		\ \\
 
 		\end{flushright}
@@ -122,20 +122,168 @@ centertags]{article} % относится к классу article и разме�
 
 \section{Lab 2}
 
-\subsection{Plotting a non-parametric estimation of PDF in form of a histogram and ernel density function for MRV (or probability law in case of discrete MRV).}
+\subsection{Dataset Info}
+
+For labs we have used a dataset which contains information of bitcion price trend indicators. Before doing task, I will write a small tutorial about how to download and use this dataset:
+
+\begin{enumerate}
+	\item Download dataset from this \href{https://www.kaggle.com/devbcdestiller/bitcoin-usdt-price-trend-indicators}{link} and save it in \textsc{./data/} folder with filename \textsc{data.csv}
+	\item Apply several feature engineering using code in \textsc{mma\_lab\_2\_shirokov.ipynb} notebook
+\end{enumerate}
+
+This dataset contains that columns:
+
+\begin{itemize}
+	\item \textsc{Open} - open price
+	\item \textsc{Volume} - volume of trading
+	\item \textsc{RSI} - indicator RSI
+	\item \textsc{MACD Signal} - indicator MACD Signal
+	\item \textsc{month} - month number
+	\item \textsc{STOCHRSI-D} - indicator STOCH
+	\item \textsc{quantile\_Volume} - binned volume
+	\item \textsc{Close} - target variable, close price
+\end{itemize}
+
+\newpage
+
+\subsection{Plotting a non-parametric estimation of PDF in form of a histogram and Kernel density function for MRV (or probability law in case of discrete MRV).}
+
+Firstly i have visualised a non-parametric estimation of PDF in form of a histogram and Kerner density function on the same plot for each dataset variable, and after that visualised the distribution (scatterplot and non-parametric PDF plus KDE) between every pair of variables (not using categorical). 
+
+
+\begin{center}
+\includegraphics[scale=0.45]{images/task_1_hist.png}
+
+Histogram with bins usin \textsc{Sturges} rule and KDE (default epanechnikov kernel) 
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.7]{images/mvr_Open_Volume.png}
+
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.7]{images/mvr_RSI_MACD Signal.png}
+
+Examples of distribution between pairs of variables with \textsc{hue=month}
+\end{center}
+
+Every plot was visualised using python package \textbf{Seaborn}.
 
 \subsection{Estimation of multivariate mathematical expectation and variance.}
 
+In this subsection I have counted the mathematical statistic of expectation and variance using methods of \textsc{pandas.DataFrame} - \textsc{mean()} and \textsc{var()}.
+
+\begin{center}
+\includegraphics[scale=1]{images/mean_var.png}
+
+The results of subtask 2
+\end{center}
+
+\newpage
+
 \subsection{Non-parametric estimation of conditional distributions, mathematical expectations and variances.}
+
+The condition determined the value of the categorical variable, for our dataset this variable is \textsc{quantile\_Volume}. For each \textsc{quantile\_Volume} value, step $1$ has been reproduced and information for every conditional distribution about mean and var has been counted.
+
+\begin{center}
+\includegraphics[scale=0.35]{images/distr.png}
+
+Distribution of each pairs of variables
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.4]{images/distr_hue_quantile_volume.png}
+
+This is distribution of pairs of variables for each cateofry of \textsc{quantile\_Volume} using seaborn method \textsc{seaborn.pairplot}
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.3]{images/conditional_distr_column_Open.png}
+\includegraphics[scale=0.3]{images/conditional_distr_column_Volume.png}
+\includegraphics[scale=0.3]{images/conditional_distr_column_RSI.png}
+\includegraphics[scale=0.3]{images/conditional_distr_column_MACD Signal.png}
+\includegraphics[scale=0.3]{images/conditional_distr_column_Close.png}
+
+Some conditional distributions for each variable, which depends on \textsc{quantile\_Volume}
+\end{center}
+
+After I have counted conditional mathematil expectation and variance and visualised it as \textsc{DataFrame}.
+
+\begin{center}
+\includegraphics[scale=0.9]{images/cond_mean.png}
+\includegraphics[scale=0.9]{images/cond_var.png}
+
+Conditional mathematical expectation and variance for each value of categorical variable
+\end{center}
+
+\newpage
 
 \subsection{Estimation of pair correlation coefficients, confidence intervals for them and significance levels.}
 
+In this task first I have visualised correlation plot using \textsc{sns.heatmap} and after that for each correlation i have counted confidence intervals. To find the numerical characteristics of the confidence intervals, the stats module of the \textsc{SciPy} package was used.
+
+\begin{center}
+\includegraphics[scale=0.5]{images/correlation_plot.png}
+
+Correlation plot
+\end{center}
+
+As we can see on the correlation Plot, column Open has a very high correlation with target value. Other columns have low correlations between each other. For each pair of feature confidence interval of correlation has been counted.
+
+\begin{center}
+\includegraphics[scale=0.6]{images/corr_coef.png}
+
+Confidence interval of each correlation
+\end{center}
+
 \subsection{Task formulation for regression, multivariate correlation.}
 
-\subsection{Regression model,multicollinearity and regularization (if needed).}
+Due to results in previous subtask, we will try to predict \textbf{target} column \textsc{target=Close} by \textbf{predictors}:
+$$\text{Open}, \text{Volume}, \text{RSI}, \text{MACD Signal}, \text{month}, \text{STOCHRSI-D}, \text{quantile\_Volume}$$
+
+\subsection{Regression model, multicollinearity and regularization (if needed).}
+
+In this task I have used python package \textsc{scikit-learn} and its implementation of \textsc{LinearRegression}, \textsc{Lasso Regression} and \textsc{Ridge} Regression. The cross-validation technique on $10$ folds with differentseeds was used to count a \textit{Mean Absolute Error} (MAE) and \textit{Root Mean Squared Error} (RMSE) to compare results. Te Ridge and Lasso regression was used for regularization cause \textit{OPEN} predictor has very big colleration with target \textit{CLOSE}, so we want to make weights of each predictor be contolled by optimization task. 
+
+For Lasso and Ridge Regression the best $\alpha$ (coefficient of regularization) was found from grid $\alpha_i = [0.001, 1]$. 
+
+Let's see the results.
+
+\begin{center}
+\includegraphics[scale=0.6]{images/results_reg.png}
+
+Results of implementation of each method. The Lasso method with counted value of regularization coefficient $\alpha=0.76$ was the best due to minimizing \textsc{MAE} and \textsc{RMSE} metrics.
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.9]{images/vif_data.png}
+
+Also, using \textsc{variance\_inflation\_factor} from \textbf{StatsModels} package the variance inflation factor has been counted. We can see that with \textsc{Open}, \textsc{RSI}, \textsc{month}, and \textsc{quantile\_Volume} multicollinearity is high.
+\end{center}
 
 \subsection{Quality analysis.}
 
+\begin{center}
+\includegraphics[scale=0.7]{images/target_predict.png}
+
+How close target and prediction
+\end{center}
+
+\begin{center}
+\includegraphics[scale=0.55]{images/residuals.png}
+
+Residuals of model - difference between target and predict.
+\end{center}
+
+As you can see in the plot, the model errors have a good normal distribution around $0$. In the future, to improve the quality of the model, one can analyze the instances on which the model makes the most mistakes, and, for example, remove it from the training set.
+
 \section{Source code}
+
+The link to the sourse code is on my \href{https://github.com/aptmess/MMA/}{github}.
+
+\section{Conclusion}
+
+I have learned about some methods of multivariate data analysis, used some popular Python packages, have understood the data of the dataset, used linear regression model with regularization and best coeffecient of refulatization and applied some algorithms of mathematical statistic for calculating confidence interval. 
 
 \end{document}
