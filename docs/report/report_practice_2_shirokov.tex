@@ -148,7 +148,7 @@ This dataset contains that columns:
 
 \subsection{Plotting a non-parametric estimation of PDF in form of a histogram and Kernel density function for MRV (or probability law in case of discrete MRV).}
 
-Firstly i have visualised a non-parametric estimation of PDF in form of a histogram and Kerner density function on the same plot for each dataset variable, and after that visualised the distribution (scatterplot and non-parametric PDF plus KDE) between every pair of variables (not using categorical). 
+Firstly i have visualised a non-parametric estimation of PDF in form of a histogram and Kerner density function on the same plot for each dataset variable, and after that visualised the KDE distribution between every pair of variables (not using categorical). 
 
 
 \begin{center}
@@ -158,14 +158,9 @@ Histogram with bins usin \textsc{Sturges} rule and KDE (default epanechnikov ker
 \end{center}
 
 \begin{center}
-\includegraphics[scale=0.7]{images/mvr_Open_Volume.png}
+\includegraphics[scale=0.37]{images/kde_pairs.png}
 
-\end{center}
-
-\begin{center}
-\includegraphics[scale=0.7]{images/mvr_RSI_MACD Signal.png}
-
-Examples of distribution between pairs of variables with \textsc{hue=month}
+KDE pairs distributions
 \end{center}
 
 Every plot was visualised using python package \textbf{Seaborn}.
@@ -205,7 +200,7 @@ This is distribution of pairs of variables for each cateofry of \textsc{quantile
 \includegraphics[scale=0.3]{images/conditional_distr_column_MACD Signal.png}
 \includegraphics[scale=0.3]{images/conditional_distr_column_Close.png}
 
-Some conditional distributions for each variable, which depends on \textsc{quantile\_Volume}
+Some conditional distributions for each variable, which depends on \textsc{quantile\_Volume} (more pictures in notebook)
 \end{center}
 
 After I have counted conditional mathematil expectation and variance and visualised it as \textsc{DataFrame}.
@@ -229,7 +224,11 @@ In this task first I have visualised correlation plot using \textsc{sns.heatmap}
 Correlation plot
 \end{center}
 
-As we can see on the correlation Plot, column Open has a very high correlation with target value. Other columns have low correlations between each other. For each pair of feature confidence interval of correlation has been counted.
+As we can see on the correlation Plot, column Open has a very high correlation with target value. Other columns have low correlations between each other. For each pair of feature confidence interval of correlation has been counted due to formula:
+
+$$\operatorname{th}\left(\operatorname{arcth}(r) - \frac{u_{1 - \frac{\alpha}{2}}}{\sqrt{n-3}}\right) < \rho < \operatorname{th}\left(\operatorname{arcth}(r) + \frac{u_{1 - \frac{\alpha}{2}}}{\sqrt{n-3}}\right)$$
+
+where $r$ is correlation coefficient.
 
 \begin{center}
 \includegraphics[scale=0.6]{images/corr_coef.png}
@@ -240,20 +239,22 @@ Confidence interval of each correlation
 \subsection{Task formulation for regression, multivariate correlation.}
 
 Due to results in previous subtask, we will try to predict \textbf{target} column \textsc{target=Close} by \textbf{predictors}:
-$$\text{Open}, \text{Volume}, \text{RSI}, \text{MACD Signal}, \text{month}, \text{STOCHRSI-D}, \text{quantile\_Volume}$$
+$$\text{Open}, \text{Volume}, \text{RSI}, \text{MACD Signal}, \text{month}, \text{quantile\_Volume}$$
+
+without \text{STOCHRSI-D} because of verlow correlation.
 
 \subsection{Regression model, multicollinearity and regularization (if needed).}
 
-In this task I have used python package \textsc{scikit-learn} and its implementation of \textsc{LinearRegression}, \textsc{Lasso Regression} and \textsc{Ridge} Regression. The cross-validation technique on $10$ folds with differentseeds was used to count a \textit{Mean Absolute Error} (MAE) and \textit{Root Mean Squared Error} (RMSE) to compare results. Te Ridge and Lasso regression was used for regularization cause \textit{OPEN} predictor has very big colleration with target \textit{CLOSE}, so we want to make weights of each predictor be contolled by optimization task. 
+In this task I have used python package \textsc{scikit-learn} and its implementation of \textsc{LinearRegression}, \textsc{Lasso Regression} and \textsc{Ridge} Regression. The cross-validation technique on $10$ folds with differentseeds was used to count a \textit{Mean Absolute Error} (MAE) and \textit{Root Mean Squared Error} (RMSE) to compare results. Te Ridge and Lasso regression was used for regularization cause \textit{Volume} and \textit{quantile\_Volume} has very big multicolleration, so we want to make weights of each predictor be contolled by optimization task. 
 
-For Lasso and Ridge Regression the best $\alpha$ (coefficient of regularization) was found from grid $\alpha_i = [0.001, 1]$. 
+For Lasso and Ridge Regression the best $\alpha$ (coefficient of regularization) was found from grid $\alpha_i = [0.001, 5]$. 
 
 Let's see the results.
 
 \begin{center}
-\includegraphics[scale=0.6]{images/results_reg.png}
+\includegraphics[scale=0.8]{images/results_reg.png}
 
-Results of implementation of each method. The Lasso method with counted value of regularization coefficient $\alpha=0.76$ was the best due to minimizing \textsc{MAE} and \textsc{RMSE} metrics.
+Results of implementation of each method. The Lasso method with counted value of regularization coefficient $\alpha=0.79$ was the best due to minimizing \textsc{MAE} and \textsc{RMSE} metrics.
 \end{center}
 
 \begin{center}
@@ -271,12 +272,26 @@ How close target and prediction
 \end{center}
 
 \begin{center}
-\includegraphics[scale=0.55]{images/residuals.png}
+\includegraphics[scale=0.45]{images/residuals.png}
 
 Residuals of model - difference between target and predict.
 \end{center}
 
-As you can see in the plot, the model errors have a good normal distribution around $0$. In the future, to improve the quality of the model, one can analyze the instances on which the model makes the most mistakes, and, for example, remove it from the training set.
+As you can see in the plot, the model errors seemst to have a good normal distribution with mean around $0$, but Shapiro-Wilk's test says that, it is abosutely not normal. 
+
+\begin{center}
+\includegraphics[scale=0.55]{images/shapiro.png}
+\end{center}
+
+By the way the student mean test says that the hypothesis that mean of residuals is $0$ is accepted, so only variance isn't normally satisfied.
+
+\begin{center}
+\includegraphics[scale=0.55]{images/t.png}
+
+$T < z_{quantile}$, so the hypothesis is accepted
+\end{center}
+
+In the future, to improve the quality of the model, one can analyze the instances on which the model makes the most mistakes, and, for example, remove it from the training set.
 
 \section{Source code}
 
