@@ -291,7 +291,17 @@ By the way the student mean test says that the hypothesis that mean of residuals
 $T < z_{quantile}$, so the hypothesis is accepted
 \end{center}
 
-In the future, to improve the quality of the model, one can analyze the instances on which the model makes the most mistakes, and, for example, remove it from the training set.
+The coefficient of determination fixes the proportion of the explained variance of the effective feature due to the factors under consideration, and since R2 is practically equal to one, there are no unaccounted factors in the model and all the signs explain the target variable. 
+From the point of view of the prerequisites of the model, the assumption of zero mathematical expectation of residuals is fulfilled and then if you look at the qq-plot 
+
+\begin{center}
+\includegraphics[scale=0.65]{images/qqplot.png}
+\end{center}
+ 
+ then the assumption of normality of residuals with zero mean and variance is practically fulfilled, with the exception of the tails of the distribution, by the way when increasing the sample size, the assumption of normality for the residuals is not really required, so this assumption is also works for our model.
+
+Therefore, based on the result of the analysis, we can say that the model is suitable for explaining dependencies using linear regression - from the point of view of the explained variance and from the point of view of the prerequisites for building this model.
+
 
 \section{Source code}
 
